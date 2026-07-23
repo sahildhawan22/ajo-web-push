@@ -1,9 +1,22 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://assets.adobedtm.com/b5cbd1a1220e/a4fa49b9649b/launch-a4db376ed7a9-development.min.js" async></script>
+  <script>
+    !function (n, o) {
+      o.forEach(function (o) {
+        n[o] || ((n.__alloyNS = n.__alloyNS || [])
+          .push(o), n[o] = function () {
+            var u = arguments; return new Promise(function (i, l) {
+              n[o].q.push([i, l, u])
+            })
+          }, n[o].q = [])
+      })
+    }(window, ["alloy"]);
+  </script>
+  <script async src="https://cdn1.adoberesources.net/alloy/2.32.0/alloy.min.js"></script>
   <title>Price Drop Trigger</title>
 
   <script>
@@ -40,7 +53,7 @@
       background: white;
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
       border: 2px solid transparent;
       cursor: pointer;
@@ -51,7 +64,7 @@
 
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
     }
 
     .card.selected {
@@ -163,6 +176,14 @@
     const triggerBtn = document.getElementById("triggerBtn");
     const statusEl = document.getElementById("status");
 
+    async function init() { 
+      const res = await fetch("/config"); 
+      const CONFIG = await res.json(); 
+      await alloy("configure", CONFIG); 
+    } 
+    
+    init().catch(console.error);
+
     function setStatus(message) {
       statusEl.innerText = message || "";
     }
@@ -210,13 +231,17 @@
         SKU: item.dataset.sku
       }));
 
-      window.adobeDataLayer.push({
-        event: "price.drop",
-        productListItems: productListItems
+      alloy("sendEvent", {
+        xdm: {
+          eventType: "price.drop",
+          productListItems: productListItems
+        }
+      }).then(() => {
+        setStatus(`✅ price.drop event sent for ${selected.length} product(s).`);
+      }).catch(err => {
+        console.error(err);
+        setStatus("❌ Failed to send event");
       });
-
-      setStatus(`✅ price.drop event sent for ${selected.length} product(s).`);
-      console.log("Pushed to data layer:", productListItems);
     }
   </script>
 </body>
