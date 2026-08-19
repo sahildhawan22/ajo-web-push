@@ -16,7 +16,7 @@
       })
     }(window, ["alloy"]);
   </script>
-  <script async src="https://cdn1.adoberesources.net/alloy/2.32.0/alloy.min.js"></script>
+  <script src="https://assets.adobedtm.com/e78d80a30a77/35ef85a9f9a0/launch-a61a3e2e8147-development.min.js" async></script>
   <title>Price Drop Trigger</title>
 
   <script>
@@ -231,17 +231,23 @@
         SKU: item.dataset.sku
       }));
 
-      alloy("sendEvent", {
-        xdm: {
-          eventType: "price.drop",
-          productListItems: productListItems
+window.adobeDataLayer.push({
+    event: "price.drop",
+    productListItems: productListItems,
+    web: {
+        webInteraction: {
+            name: "price drop", //pass the event name value
+            type: "other",
+            linkClicks: {
+                value: 1
+            }
         }
-      }).then(() => {
-        setStatus(`✅ price.drop event sent for ${selected.length} product(s).`);
-      }).catch(err => {
-        console.error(err);
-        setStatus("❌ Failed to send event");
-      });
+    }
+});
+setStatus(`✅ price.drop event sent for ${selected.length} product(s).`);
+console.log("Pushed to data layer:", productListItems);
+
+
     }
   </script>
 </body>
