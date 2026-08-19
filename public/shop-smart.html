@@ -3,12 +3,12 @@
 <head>
   <title>Shop - Smart Notifications</title>
 
+  <script src="https://assets.adobedtm.com/e78d80a30a77/35ef85a9f9a0/launch-a61a3e2e8147-development.min.js" async></script>
   <script>
     !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[])
     .push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){
     n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);
   </script>
-  <script src="https://assets.adobedtm.com/e78d80a30a77/35ef85a9f9a0/launch-a61a3e2e8147-development.min.js" async></script>
 
   <style>
     body {
@@ -144,6 +144,7 @@
     return elapsed < OPT_IN_WINDOW_MS;
   }
 
+  //Set the opt-in timestamp in localStorage to the current time
   function markOptInNow() {
     localStorage.setItem(OPT_IN_KEY, String(Date.now()));
   }
@@ -187,8 +188,8 @@
 
       if (!hasOptedInWithinLast24Hours()) {
         await adobeDataLayer.push({
-    "event": "push.subscribe"
-});
+          "event": "push.subscribe"
+        });
         markOptInNow();
       }
 

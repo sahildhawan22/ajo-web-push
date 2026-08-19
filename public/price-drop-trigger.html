@@ -179,7 +179,7 @@
     async function init() { 
       const res = await fetch("/config"); 
       const CONFIG = await res.json(); 
-      await alloy("configure", CONFIG); 
+      // await alloy("configure", CONFIG); 
     } 
     
     init().catch(console.error);
