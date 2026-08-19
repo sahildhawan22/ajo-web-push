@@ -8,7 +8,7 @@
     .push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){
     n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);
   </script>
-  <script async src="https://cdn1.adoberesources.net/alloy/2.32.0/alloy.min.js"></script>
+  <script src="https://assets.adobedtm.com/e78d80a30a77/35ef85a9f9a0/launch-a61a3e2e8147-development.min.js" async></script>
 
   <style>
     body {
@@ -168,8 +168,6 @@
       return;
     }
 
-    await alloy("configure", CONFIG);
-
     if ("serviceWorker" in navigator) {
       await navigator.serviceWorker.register("/alloyServiceWorker.js", { scope: "/" });
       await navigator.serviceWorker.ready;
@@ -188,7 +186,9 @@
       }
 
       if (!hasOptedInWithinLast24Hours()) {
-        await alloy("sendPushSubscription");
+        await adobeDataLayer.push({
+    "event": "push.subscribe"
+});
         markOptInNow();
       }
 
